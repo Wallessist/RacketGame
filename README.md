@@ -34,3 +34,5 @@ A taste of using racket language to program a game
 但遇到重大的、能导致程序崩溃的问题：
 
 可以联系QQ:1652410017
+
+开发人员：tang xin
