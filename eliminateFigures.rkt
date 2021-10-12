@@ -111,7 +111,7 @@
 (define Score-record (read-words/line
                       (if (file-exists? RECORD-FILE)
                           RECORD-FILE
-                          (write-file RECORD-FILE " "))))
+                          (write-file RECORD-FILE " \n "))))
 (define Playerone (player (* WORLD-WIDTH 1/10) (- WORLD-HEIGHT (/ PLAYER-HEIGHT 2))
                           8 0 5 "playerone" #f #f #f #f '() RIGHT #f 0))
 (define Playertwo (player (* WORLD-WIDTH 9/10) (- WORLD-HEIGHT (/ PLAYER-HEIGHT 2))
@@ -1286,6 +1286,15 @@
             (foldl (lambda (x y) (string-append y x))
                    " "
                    (map (lambda (x) (string-append x " ")) lst)))
+          (define (display-state->initial dp)
+            (struct-copy display-state dp
+                         [lv1 1]
+                         [lv2 1]))
+          (define (world-state->initial ws)
+            (struct-copy world ws
+                         [display-state (display-state->initial
+                                         (world-display-state ws))]))
+          
           (define (world-change lv1 lv2 lv3)
             (cond
               [(= 1 lv1) (struct-copy world ws
@@ -1302,7 +1311,7 @@
                                )]
                  [(= lv2 2)
                   (if (and (string=? ke "\r") (= lv3 2))
-                      World
+                      (world-state->initial ws)
                       (struct-copy world ws
                                [display-state (game-pause-change ke)]))]
                  [(= lv2 3) (if (string=? ke "escape")
@@ -1324,7 +1333,7 @@
                                [display-state (game-display-change ke)])]
                  [(= lv2 2)
                   (if (and (string=? ke "\r") (= lv3 2))
-                      World
+                      (world-state->initial ws)
                       (struct-copy world ws
                                    [display-state (game-pause-change ke)]))]
                  [(= lv2 3) (if (string=? ke "escape")
@@ -1337,7 +1346,7 @@
                                [display-state (game-display-change ke)])]
                  [(= lv2 2)
                   (if (and (string=? ke "\r") (= lv3 2))
-                      World
+                      (world-state->initial ws)
                       (struct-copy world ws
                                    [display-state (game-pause-change ke)]))]
                  [(= lv2 3) (if (string=? ke "escape")
