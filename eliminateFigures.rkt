@@ -1037,7 +1037,7 @@
 (define (new-bullets bullets play lv wt)
   (local ((define bt (player-bullet-time play))
           (define make? (player-make-bullet? play)))
-    (if (= (modulo bt 40) 6)
+    (if (= (modulo bt 40) 3)
         (cons (new-bullet play lv 20)
               bullets)
         bullets)))
@@ -1291,9 +1291,10 @@
                          [lv1 1]
                          [lv2 1]))
           (define (world-state->initial ws)
-            (struct-copy world ws
+            (struct-copy world World
                          [display-state (display-state->initial
-                                         (world-display-state ws))]))
+                                         (world-display-state ws))]
+                         [score-record (world-score-record ws)]))
           
           (define (world-change lv1 lv2 lv3)
             (cond
